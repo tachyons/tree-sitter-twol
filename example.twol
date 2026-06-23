@@ -1,0 +1,46 @@
+!! Finnish consonant gradation - example TwoL grammar
+!! Based on standard hfst-twolc notation
+
+Alphabet
+  a b c d e f g h i j k l m n o p q r s t u v w x y z
+  ä ö å
+  A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+  Ä Ö Å
+  k:g k:v k:0
+  p:v p:b p:0
+  t:d t:0
+  n:m
+  0:i 0:e
+;
+
+Sets
+  Vowel    = a e i o u y ä ö å A E I O U Y Ä Ö Å ;
+  Consonant = b c d f g h j k l m n p q r s t v w x z
+              B C D F G H J K L M N P Q R S T V W X Z ;
+
+Definitions
+  VowelSeq = Vowel+ ;
+  ClosedSyll = Consonant Vowel Consonant ;
+
+Rules
+
+  !! k:g — voiced in intervocalic position
+  "k:g in intervocalic position" k:g <=> Vowel _ Vowel ;
+
+  !! k:v — labialised before u/o
+  k:v <=> Vowel _ (Vowel* u | Vowel* o) ;
+
+  !! k:0 — deleted in coda before consonant
+  k:0 => _ Consonant ;
+
+  !! p:v — spirantisation
+  p:v <=> Vowel _ Vowel ;
+
+  !! t:d — lenition
+  t:d <=> Vowel _ Vowel ;
+
+  !! Vowel epenthesis: 0:i inserted between two consonants
+  0:i => Consonant _ Consonant ;
+
+  !! Prohibition: do not insert vowel word-initially
+  0:i /=> .#. _ ;
